@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#6b3f24">
+<title>Quitutes de Lourdes</title>
+<style>
+:root{
+  --marrom:#6b3f24; --creme:#fff8ee; --dourado:#d7a24b; --verde:#3f7d4c;
+  --vermelho:#a94442; --cinza:#6f6f6f; --card:#ffffff; --borda:#eadfce;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--creme);color:#34261f}
+header{
+  background:linear-gradient(135deg,#6b3f24,#8b5634);color:white;padding:18px 16px 16px;
+  text-align:center;position:sticky;top:0;z-index:20;box-shadow:0 2px 8px #0002
+}
+header h1{margin:0;font-family:Georgia,serif;font-size:27px}
+header p{margin:5px 0 0;font-size:12px;opacity:.9}
+main{max-width:720px;margin:auto;padding:14px 12px 90px}
+.grid-menu{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:8px 0 16px}
+.menu-btn{
+  border:0;border-radius:18px;background:white;padding:22px 10px;font-size:18px;font-weight:700;
+  color:var(--marrom);box-shadow:0 3px 12px #6b3f2417;min-height:110px
+}
+.menu-btn span{display:block;font-size:34px;margin-bottom:6px}
+.menu-btn.full{grid-column:1/-1;min-height:80px}
+.menu-btn.primary{background:#fff3d7;border:2px solid var(--dourado)}
+.mini-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}
+.mini{border:0;border-radius:9px;padding:7px 9px;font-size:12px;font-weight:bold;background:#eee;color:#4b3528}
+.mini.ok{background:#dff2e3;color:#286338}.mini.wait{background:#fff0c7;color:#785b00}.mini.no{background:#f7dddd;color:#8e2d2d}.mini.danger{background:#f2dede;color:#8e2d2d}
+.order-tools{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+section{display:none}
+section.active{display:block}
+.card{background:white;border:1px solid var(--borda);border-radius:16px;padding:15px;margin:10px 0;box-shadow:0 2px 10px #0000000d}
+h2{color:var(--marrom);margin:5px 0 12px;font-size:23px}
+h3{margin:5px 0 10px}
+label{display:block;font-size:13px;font-weight:bold;margin:10px 0 5px;color:#5c4b42}
+input,select{
+  width:100%;padding:13px;border:1px solid #d9cbb9;border-radius:12px;background:white;font-size:16px
+}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.action{
+  width:100%;border:0;border-radius:13px;padding:14px;margin-top:14px;background:var(--marrom);
+  color:white;font-size:17px;font-weight:bold
+}
+.secondary{background:#8b7a6d}.success{background:var(--verde)}.danger{background:var(--vermelho)}
+.back{border:0;background:transparent;color:var(--marrom);font-weight:bold;font-size:16px;padding:5px 0 8px}
+.product-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.prod{
+  border:2px solid var(--borda);border-radius:14px;padding:12px 8px;background:#fff;text-align:center;
+  font-weight:bold;color:#4b3528;min-height:72px
+}
+.prod.sel{border-color:var(--dourado);background:#fff3d7}
+.small{font-size:12px;color:var(--cinza);font-weight:normal;margin-top:4px}
+.stock-line,.delivery-line,.sale-line{
+  display:flex;justify-content:space-between;gap:10px;align-items:center;padding:11px 2px;border-bottom:1px solid #eee3d6
+}
+.stock-line:last-child,.delivery-line:last-child,.sale-line:last-child{border-bottom:0}
+.qty{font-size:22px;font-weight:bold;color:var(--marrom)}
+.badge{padding:5px 9px;border-radius:999px;font-size:12px;font-weight:bold;background:#eee}
+.badge.ok{background:#dff2e3;color:#286338}.badge.wait{background:#fff0c7;color:#785b00}.badge.no{background:#f7dddd;color:#8e2d2d}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat{background:#fff;border:1px solid var(--borda);border-radius:15px;padding:14px}
+.stat b{display:block;font-size:22px;color:var(--marrom);margin-top:5px}
+.notice{background:#fff3d7;border-left:4px solid var(--dourado);padding:10px 12px;border-radius:8px;font-size:13px;margin:10px 0}
+footer{position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px solid var(--borda);padding:8px 10px;text-align:center;font-size:11px;color:#76665b}
+.hidden{display:none!important}
+@media(max-width:380px){.grid-menu{gap:8px}.menu-btn{font-size:16px}.row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Quitutes de Lourdes</h1>
+  <p>Produção artesanal, feita com carinho e oração</p>
+</header>
+
+<main>
+<section id="home" class="active">
+  <div class="grid-menu">
+    <button class="menu-btn full primary" onclick="go('pedidos')"><span>📋</span>TODOS OS PEDIDOS</button>
+    <button class="menu-btn" onclick="go('produzir')"><span>🧁</span>PRODUZIR</button>
+    <button class="menu-btn" onclick="go('vender')"><span>💰</span>NOVO PEDIDO</button>
+    <button class="menu-btn" onclick="go('estoque')"><span>📦</span>ESTOQUE</button>
+    <button class="menu-btn" onclick="go('resumo')"><span>📊</span>RESUMO</button>
+    <button class="menu-btn full" onclick="go('entregas')"><span>🚚</span>ENTREGAS DE HOJE</button>
+    <button class="menu-btn full" onclick="go('mais')"><span>⚙️</span>MAIS CONTROLES</button>
+  </div>
+  <div class="notice">Tudo foi pensado para poucos cliques. Produziu? Informe a quantidade. Vendeu? Escolha o bolo, o cliente e pronto.</div>
+</section>
+
+<section id="pedidos">
+  <button class="back" onclick="go('home')">← Voltar</button>
+  <h2>📋 Todos os pedidos</h2>
+  <div class="card">
+    <div class="order-tools">
+      <div><label>Ordenar por</label><select id="ordemPedidos" onchange="renderPedidos()"><option value="via">Via</option><option value="cliente">Cliente</option><option value="data">Data</option></select></div>
+      <div><label>Mostrar</label><select id="filtroPedidos" onchange="renderPedidos()"><option value="todos">Todos</option><option value="pendentes">Não entregues</option><option value="receber">A receber</option><option value="recebidos">Recebidos</option></select></div>
+    </div>
+    <div id="listaPedidos"></div>
+  </div>
+</section>
+
+<section id="produzir">
+  <button class="back" onclick="go('home')">← Voltar</button>
+  <h2>🧁 Produzir</h2>
+  <div class="card">
+    <label>Produto</label>
+    <select id="prodProduto"></select>
+    <label>Quantidade produzida</label>
+    <input id="prodQtd" type="number" min="1" inputmode="numeric" value="1">
+    <button class="action success" onclick="registrarProducao()">Adicionar ao estoque</button>
+  </div>
+</section>
+
+<section id="vender">
+  <button class="back" onclick="go('home')">← Voltar</button>
+  <h2>💰 Vender</h2>
+  <div class="card">
+    <label>Cliente</label>
+    <input id="cliente" list="clientesLista" placeholder="Digite o nome" oninput="preencherCliente()">
+    <datalist id="clientesLista"></datalist>
+    <div class="row">
+      <div><label>Via</label><input id="via" placeholder="Ex.: 5"></div>
+      <div><label>Casa</label><input id="casa" placeholder="Ex.: 72"></div>
+    </div>
+    <label>Canal</label>
+    <select id="canal" onchange="atualizarPreco()">
+      <option value="Particular">Particular</option>
+      <option value="Padaria">Padaria</option>
+    </select>
+  </div>
+  <div class="card">
+    <h3>Escolha o produto</h3>
+    <div id="vendaProdutos" class="product-grid"></div>
+    <div class="row">
+      <div><label>Quantidade</label><input id="vendaQtd" type="number" min="1" value="1" oninput="atualizarPreco()"></div>
+      <div><label>Total</label><input id="totalVenda" readonly></div>
+    </div>
+    <div class="row">
+      <div><label>Data da entrega</label><input id="dataEntrega" type="date"></div>
+      <div><label>Horário</label><input id="horaEntrega" type="time"></div>
+    </div>
+    <label>Situação</label>
+    <select id="situacao">
+      <option value="Entregue e recebido">Entregue e recebido</option>
+      <option value="Entregue a receber">Entregue a receber</option>
+      <option value="Não entregue">Não entregue</option>
+    </select>
+    <button class="action" onclick="registrarVenda()">Registrar venda</button>
+  </div>
+</section>
+
+<section id="estoque">
+  <button class="back" onclick="go('home')">← Voltar</button>
+  <h2>📦 Estoque de bolos</h2>
+  <div id="listaEstoque" class="card"></div>
+</section>
+
+<section id="resumo">
+  <button class="back" onclick="go('home')">← Voltar</button>
+  <h2>📊 Resumo de hoje</h2>
+  <div id="stats" class="stats"></div>
+  <div class="card">
+    <h3>Este mês</h3>
+    <div id="statsMes" class="stats"></div>
+  </div>
+  <div class="card">
+    <h3>Vendas de hoje</h3>
+    <div id="listaVendas"></div>
+  </div>
+</section>
+
+<section id="entregas">
+  <button class="back" onclick="go('home')">← Voltar</button>
+  <h2>🚚 Entregas de hoje</h2>
+  <div class="card" id="listaEntregas"></div>
+</section>
+
+<section id="mais">
+  <button class="back" onclick="go('home')">← Voltar</button>
+  <h2>⚙️ Mais controles</h2>
+  <div class="grid-menu">
+    <button class="menu-btn" onclick="go('insumos')"><span>🥣</span>INSUMOS</button>
+    <button class="menu-btn" onclick="go('compras')"><span>🛒</span>COMPRAS</button>
+    <button class="menu-btn full" onclick="go('financeiro')"><span>💵</span>FINANCEIRO</button>
+  </div>
+  <div class="notice">Esses controles ficam separados para não atrapalhar o registro rápido de produção e pedidos.</div>
+</section>
+
+<section id="insumos">
+  <button class="back" onclick="go('mais')">← Voltar</button>
+  <h2>🥣 Estoque de insumos</h2>
+  <div class="card">
+    <label>Nome do insumo</label>
+    <input id="insNome" placeholder="Ex.: Farinha Nita">
+    <div class="row">
+      <div><label>Quantidade</label><input id="insQtd" type="number" min="0" step="0.001" inputmode="decimal" placeholder="0"></div>
+      <div><label>Unidade</label><select id="insUnidade"><option>kg</option><option>g</option><option>L</option><option>ml</option><option>un</option><option>pct</option></select></div>
+    </div>
+    <button class="action" onclick="salvarInsumo()">Salvar / atualizar insumo</button>
+  </div>
+  <div id="listaInsumos" class="card"></div>
+</section>
+
+<section id="compras">
+  <button class="back" onclick="go('mais')">← Voltar</button>
+  <h2>🛒 Registrar compra</h2>
+  <div class="card">
+    <label>Insumo</label>
+    <input id="compraNome" list="insumosLista" placeholder="Ex.: Açúcar">
+    <datalist id="insumosLista"></datalist>
+    <div class="row">
+      <div><label>Quantidade comprada</label><input id="compraQtd" type="number" min="0.001" step="0.001" inputmode="decimal" value="1"></div>
+      <div><label>Unidade</label><select id="compraUnidade"><option>kg</option><option>g</option><option>L</option><option>ml</option><option>un</option><option>pct</option></select></div>
+    </div>
+    <label>Valor total pago</label>
+    <input id="compraValor" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0,00">
+    <button class="action success" onclick="registrarCompra()">Registrar compra e somar ao estoque</button>
+  </div>
+  <div class="card"><h3>Compras recentes</h3><div id="listaCompras"></div></div>
+</section>
+
+<section id="financeiro">
+  <button class="back" onclick="go('mais')">← Voltar</button>
+  <h2>💵 Financeiro</h2>
+  <div id="financeiroHoje" class="stats"></div>
+  <div class="card"><h3>Este mês</h3><div id="financeiroMes" class="stats"></div></div>
+  <div class="notice">Lucro estimado usa o custo cadastrado de cada produto. “Caixa recebido” considera apenas pedidos marcados como entregue e recebido, menos as compras de insumos registradas.</div>
+</section>
+
+</main>
+
+<footer>Quitutes de Lourdes • Controle simples de vendas e estoque</footer>
+
+<script>
+const produtos = {
+  "Cenoura simples": {particular:15, padaria:13.50, custo:5.43, base:"Cenoura simples"},
+  "Cenoura c/ coberturinha": {particular:20, padaria:13.50, custo:6.58, base:"Cenoura simples"},
+  "Cenoura c/ brigadeiro": {particular:25, padaria:13.50, custo:14.21, base:"Cenoura simples"},
+  "Cenoura vulcão": {particular:35, padaria:13.50, custo:15.69, base:"Cenoura simples"},
+  "Cenoura sem glúten e sem lactose": {particular:25, padaria:25, custo:0},
+  "Laranja": {particular:18, padaria:13.50, custo:5.36},
+  "Limão": {particular:25, padaria:25, custo:0},
+  "Fazendeiro": {particular:25, padaria:13.50, custo:8.34},
+  "Formigueiro": {particular:25, padaria:13.50, custo:0},
+  "Café com chocolate": {particular:25, padaria:25, custo:0},
+  "Maçã sem açúcar": {particular:25, padaria:25, custo:0},
+  "Fubá simples": {particular:17, padaria:13.50, custo:4.78},
+  "Fubá c/ goiabada": {particular:25, padaria:13.50, custo:6.02},
+  "Fubá cremoso": {particular:25, padaria:13.50, custo:8.88},
+  "Chocolate": {particular:16, padaria:13.50, custo:5.55},
+  "Claras": {particular:16, padaria:13.50, custo:4.66},
+  "Churros": {particular:35, padaria:13.50, custo:8.00},
+  "Rosca caseira": {particular:15, padaria:10, custo:2.00},
+  "Pão de forma": {particular:10, padaria:10, custo:4.06},
+  "Pão de Jesus (6 un)": {particular:5, padaria:5, custo:1.14}
+};
+
+let db = JSON.parse(localStorage.getItem("qdl_db") || "null") || {
+  estoque:{}, vendas:[], producoes:[], clientes:{}, insumos:{}, compras:[]
+};
+if(!db.insumos) db.insumos={};
+if(!db.compras) db.compras=[];
+let vendaSelecionada = "Cenoura simples";
+
+function salvar(){ localStorage.setItem("qdl_db", JSON.stringify(db)); }
+
+function hoje(){
+  const d=new Date();
+  return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+}
+function dinheiro(n){ return Number(n||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"}); }
+
+function go(id){
+  document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  if(id==="pedidos") renderPedidos();
+  if(id==="estoque") renderEstoque();
+  if(id==="resumo") renderResumo();
+  if(id==="entregas") renderEntregas();
+  if(id==="vender"){ renderProdutosVenda(); renderClientes(); atualizarPreco(); }
+  if(id==="insumos") renderInsumos();
+  if(id==="compras"){ renderCompras(); renderInsumosLista(); }
+  if(id==="financeiro") renderFinanceiro();
+  window.scrollTo(0,0);
+}
+
+function iniciar(){
+  const sel=document.getElementById("prodProduto");
+  Object.keys(produtos).filter(p=>!produtos[p].base || produtos[p].base===p).forEach(p=>{
+    const o=document.createElement("option"); o.value=p;o.textContent=p;sel.appendChild(o);
+  });
+  Object.keys(produtos).forEach(p=>{ if(db.estoque[p]===undefined && !produtos[p].base) db.estoque[p]=0; });
+  if(db.estoque["Cenoura simples"]===undefined) db.estoque["Cenoura simples"]=0;
+  salvar(); renderProdutosVenda(); renderClientes();
+  const de=document.getElementById("dataEntrega"); if(de && !de.value) de.value=hoje();
+}
+
+function registrarProducao(){
+  const produto=document.getElementById("prodProduto").value;
+  const qtd=Number(document.getElementById("prodQtd").value);
+  if(!qtd || qtd<1) return alert("Informe uma quantidade válida.");
+  db.estoque[produto]=(db.estoque[produto]||0)+qtd;
+  db.producoes.push({data:hoje(),produto,qtd});
+  salvar();
+  document.getElementById("prodQtd").value=1;
+  alert(qtd+" unidade(s) de "+produto+" adicionada(s) ao estoque.");
+}
+
+function renderProdutosVenda(){
+  const box=document.getElementById("vendaProdutos"); box.innerHTML="";
+  Object.keys(produtos).forEach(p=>{
+    const b=document.createElement("button"); b.className="prod"+(p===vendaSelecionada?" sel":"");
+    const base=produtos[p].base||p, saldo=db.estoque[base]||0;
+    b.innerHTML=p+'<div class="small">Estoque: '+saldo+'</div>';
+    b.onclick=()=>{vendaSelecionada=p;renderProdutosVenda();atualizarPreco()};
+    box.appendChild(b);
+  });
+}
+
+function atualizarPreco(){
+  const canal=document.getElementById("canal").value;
+  const qtd=Number(document.getElementById("vendaQtd").value)||0;
+  const pr=produtos[vendaSelecionada];
+  const unit=canal==="Padaria"?pr.padaria:pr.particular;
+  document.getElementById("totalVenda").value=dinheiro(unit*qtd);
+}
+
+function renderClientes(){
+  const dl=document.getElementById("clientesLista"); dl.innerHTML="";
+  Object.keys(db.clientes).sort().forEach(n=>{
+    const o=document.createElement("option");o.value=n;dl.appendChild(o);
+  });
+}
+function preencherCliente(){
+  const n=document.getElementById("cliente").value.trim();
+  const c=db.clientes[n];
+  if(c){document.getElementById("via").value=c.via||"";document.getElementById("casa").value=c.casa||"";}
+}
+
+function registrarVenda(){
+  const cliente=document.getElementById("cliente").value.trim()||"Cliente não informado";
+  const via=document.getElementById("via").value.trim();
+  const casa=document.getElementById("casa").value.trim();
+  const qtd=Number(document.getElementById("vendaQtd").value);
+  const canal=document.getElementById("canal").value;
+  const situacao=document.getElementById("situacao").value;
+  const dataEntrega=document.getElementById("dataEntrega").value||hoje();
+  const horaEntrega=document.getElementById("horaEntrega").value||"";
+  if(!qtd || qtd<1) return alert("Informe uma quantidade válida.");
+  const pr=produtos[vendaSelecionada];
+  const base=pr.base||vendaSelecionada;
+  const saldo=db.estoque[base]||0;
+  if(saldo<qtd) return alert("Estoque insuficiente de "+base+". Saldo atual: "+saldo);
+  const unit=canal==="Padaria"?pr.padaria:pr.particular;
+  db.estoque[base]=saldo-qtd;
+  db.vendas.push({
+    id:Date.now(),data:hoje(),cliente,via,casa,canal,produto:vendaSelecionada,qtd,
+    unit,total:unit*qtd,custo:pr.custo*qtd,situacao,dataEntrega,horaEntrega
+  });
+  if(cliente!=="Cliente não informado") db.clientes[cliente]={via,casa};
+  salvar(); renderClientes(); renderProdutosVenda();
+  document.getElementById("cliente").value="";
+  document.getElementById("via").value="";
+  document.getElementById("casa").value="";
+  document.getElementById("vendaQtd").value=1;
+  document.getElementById("horaEntrega").value="";
+  alert("Pedido registrado. Estoque atualizado automaticamente.");
+}
+
+function definirSituacao(id,situacao){
+  const v=db.vendas.find(x=>x.id===id); if(!v) return;
+  v.situacao=situacao; salvar(); renderPedidos(); renderEntregas();
+}
+function cancelarPedido(id){
+  const i=db.vendas.findIndex(x=>x.id===id); if(i<0) return;
+  const v=db.vendas[i];
+  if(!confirm("Cancelar este pedido e devolver ao estoque?")) return;
+  const base=(produtos[v.produto]&&produtos[v.produto].base)||v.produto;
+  db.estoque[base]=(db.estoque[base]||0)+Number(v.qtd||0);
+  db.vendas.splice(i,1); salvar(); renderPedidos();
+}
+function renderPedidos(){
+  const box=document.getElementById("listaPedidos"); if(!box) return;
+  const ordem=document.getElementById("ordemPedidos")?.value||"via";
+  const filtro=document.getElementById("filtroPedidos")?.value||"todos";
+  let vendas=db.vendas.slice();
+  if(filtro==="pendentes") vendas=vendas.filter(v=>v.situacao==="Não entregue");
+  if(filtro==="receber") vendas=vendas.filter(v=>v.situacao==="Entregue a receber");
+  if(filtro==="recebidos") vendas=vendas.filter(v=>v.situacao==="Entregue e recebido");
+  vendas.sort((a,b)=>{
+    if(ordem==="cliente") return String(a.cliente).localeCompare(String(b.cliente),"pt-BR");
+    if(ordem==="data") return String(a.dataEntrega||a.data).localeCompare(String(b.dataEntrega||b.data)) || String(a.horaEntrega||"").localeCompare(String(b.horaEntrega||""));
+    return String(a.via||"").localeCompare(String(b.via||""),undefined,{numeric:true}) || String(a.casa||"").localeCompare(String(b.casa||""),undefined,{numeric:true});
+  });
+  box.innerHTML="";
+  vendas.forEach(v=>{
+    const d=document.createElement("div");d.className="delivery-line";
+    const dt=v.dataEntrega||v.data||""; const hr=v.horaEntrega?" • "+v.horaEntrega:"";
+    d.innerHTML=`<div style="flex:1"><b>${v.cliente}</b><div class="small">Via ${v.via||"—"} • Casa ${v.casa||"—"}<br>${v.produto} • ${v.qtd} un. • ${dinheiro(v.total)}<br>Entrega: ${dt||"—"}${hr}</div><div class="mini-actions"><button class="mini ok" onclick="definirSituacao(${v.id},'Entregue e recebido')">Recebido</button><button class="mini wait" onclick="definirSituacao(${v.id},'Entregue a receber')">A receber</button><button class="mini no" onclick="definirSituacao(${v.id},'Não entregue')">Não entregue</button><button class="mini danger" onclick="cancelarPedido(${v.id})">Cancelar</button></div></div><div>${badge(v.situacao)}</div>`;
+    box.appendChild(d);
+  });
+  if(!vendas.length) box.innerHTML="<div class='small'>Nenhum pedido encontrado.</div>";
+}
+
+function renderEstoque(){
+  const box=document.getElementById("listaEstoque");box.innerHTML="";
+  Object.keys(db.estoque).sort().forEach(p=>{
+    const d=document.createElement("div");d.className="stock-line";
+    d.innerHTML="<span>"+p+"</span><span class='qty'>"+(db.estoque[p]||0)+"</span>";
+    box.appendChild(d);
+  });
+  if(!Object.keys(db.estoque).length) box.innerHTML="Nenhum estoque cadastrado.";
+}
+
+function renderResumo(){
+  const vendas=db.vendas.filter(v=>v.data===hoje());
+  const prod=db.producoes.filter(p=>p.data===hoje());
+  const faturamento=vendas.reduce((s,v)=>s+v.total,0);
+  const custo=vendas.reduce((s,v)=>s+v.custo,0);
+  const lucro=faturamento-custo;
+  const produzido=prod.reduce((s,p)=>s+p.qtd,0);
+  const vendidos=vendas.reduce((s,v)=>s+v.qtd,0);
+  document.getElementById("stats").innerHTML=`
+    <div class="stat">Produzidos<b>${produzido}</b></div>
+    <div class="stat">Vendidos<b>${vendidos}</b></div>
+    <div class="stat">Faturamento<b>${dinheiro(faturamento)}</b></div>
+    <div class="stat">Lucro estimado<b>${dinheiro(lucro)}</b></div>`;
+  const mes=hoje().slice(0,7);
+  const vm=db.vendas.filter(v=>String(v.data||"").slice(0,7)===mes);
+  const fatMes=vm.reduce((s,v)=>s+Number(v.total||0),0);
+  const custoMes=vm.reduce((s,v)=>s+Number(v.custo||0),0);
+  const lucroMes=fatMes-custoMes;
+  const vendidosMes=vm.reduce((s,v)=>s+Number(v.qtd||0),0);
+  document.getElementById("statsMes").innerHTML=`
+    <div class="stat">Vendidos<b>${vendidosMes}</b></div>
+    <div class="stat">Faturamento<b>${dinheiro(fatMes)}</b></div>
+    <div class="stat">Lucro estimado<b>${dinheiro(lucroMes)}</b></div>
+    <div class="stat">Pedidos<b>${vm.length}</b></div>`;
+  const box=document.getElementById("listaVendas");box.innerHTML="";
+  vendas.slice().reverse().forEach(v=>{
+    const d=document.createElement("div");d.className="sale-line";
+    d.innerHTML=`<div><b>${v.produto}</b><div class="small">${v.cliente} • ${v.qtd} un.</div></div><b>${dinheiro(v.total)}</b>`;
+    box.appendChild(d);
+  });
+  if(!vendas.length) box.innerHTML="<div class='small'>Ainda não há vendas registradas hoje.</div>";
+}
+
+function badge(s){
+  if(s==="Entregue e recebido") return "<span class='badge ok'>Recebido</span>";
+  if(s==="Entregue a receber") return "<span class='badge wait'>A receber</span>";
+  return "<span class='badge no'>Não entregue</span>";
+}
+function renderEntregas(){
+  const vendas=db.vendas.filter(v=>(v.dataEntrega||v.data)===hoje()).sort((a,b)=>
+    (String(a.via).localeCompare(String(b.via),undefined,{numeric:true}) || String(a.casa).localeCompare(String(b.casa),undefined,{numeric:true}))
+  );
+  const box=document.getElementById("listaEntregas");box.innerHTML="";
+  vendas.forEach(v=>{
+    const d=document.createElement("div");d.className="delivery-line";
+    d.innerHTML=`<div><b>${v.cliente}</b><div class="small">Via ${v.via||"—"} • Casa ${v.casa||"—"}<br>${v.produto} • ${v.qtd} un.</div></div>${badge(v.situacao)}`;
+    box.appendChild(d);
+  });
+  if(!vendas.length) box.innerHTML="<div class='small'>Nenhuma entrega registrada para hoje.</div>";
+}
+
+
+function normalizarNome(txt){ return String(txt||"").trim().replace(/\s+/g," "); }
+function fmtQtd(n){ return Number(n||0).toLocaleString("pt-BR",{maximumFractionDigits:3}); }
+function salvarInsumo(){
+  const nome=normalizarNome(document.getElementById("insNome").value);
+  const qtd=Number(document.getElementById("insQtd").value);
+  const unidade=document.getElementById("insUnidade").value;
+  if(!nome) return alert("Informe o nome do insumo.");
+  if(Number.isNaN(qtd)||qtd<0) return alert("Informe uma quantidade válida.");
+  db.insumos[nome]={qtd,unidade}; salvar(); renderInsumos(); renderInsumosLista();
+  document.getElementById("insNome").value=""; document.getElementById("insQtd").value="";
+}
+function excluirInsumo(nome){
+  if(!confirm("Excluir "+nome+" do estoque de insumos?")) return;
+  delete db.insumos[nome]; salvar(); renderInsumos();
+}
+function renderInsumos(){
+  const box=document.getElementById("listaInsumos"); if(!box) return; box.innerHTML="";
+  const nomes=Object.keys(db.insumos).sort((a,b)=>a.localeCompare(b,"pt-BR"));
+  nomes.forEach(nome=>{ const x=db.insumos[nome]; const d=document.createElement("div"); d.className="stock-line";
+    d.innerHTML=`<div><b>${nome}</b><div class="small">${fmtQtd(x.qtd)} ${x.unidade||""}</div></div><button class="mini danger" onclick='excluirInsumo(${JSON.stringify(nome)})'>Excluir</button>`; box.appendChild(d); });
+  if(!nomes.length) box.innerHTML="<div class='small'>Nenhum insumo cadastrado.</div>";
+}
+function renderInsumosLista(){
+  const dl=document.getElementById("insumosLista"); if(!dl) return; dl.innerHTML="";
+  Object.keys(db.insumos).sort((a,b)=>a.localeCompare(b,"pt-BR")).forEach(nome=>{const o=document.createElement("option");o.value=nome;dl.appendChild(o)});
+}
+function registrarCompra(){
+  const nome=normalizarNome(document.getElementById("compraNome").value);
+  const qtd=Number(document.getElementById("compraQtd").value);
+  const unidade=document.getElementById("compraUnidade").value;
+  const valor=Number(document.getElementById("compraValor").value);
+  if(!nome) return alert("Informe o insumo comprado.");
+  if(!qtd||qtd<=0) return alert("Informe a quantidade comprada.");
+  if(Number.isNaN(valor)||valor<0) return alert("Informe o valor total pago.");
+  const atual=db.insumos[nome];
+  if(atual && atual.unidade!==unidade && Number(atual.qtd||0)>0) return alert("Esse insumo está cadastrado em "+atual.unidade+". Use a mesma unidade para somar corretamente.");
+  db.insumos[nome]={qtd:Number((Number(atual?.qtd||0)+qtd).toFixed(3)),unidade};
+  db.compras.push({id:Date.now(),data:hoje(),nome,qtd,unidade,valor});
+  salvar(); renderCompras(); renderInsumosLista();
+  document.getElementById("compraNome").value=""; document.getElementById("compraQtd").value=1; document.getElementById("compraValor").value="";
+  alert("Compra registrada e estoque de insumos atualizado.");
+}
+function excluirCompra(id){
+  const i=db.compras.findIndex(c=>c.id===id); if(i<0) return; const c=db.compras[i];
+  if(!confirm("Cancelar esta compra e retirar a quantidade do estoque?")) return;
+  const x=db.insumos[c.nome]; if(x && x.unidade===c.unidade) x.qtd=Math.max(0,Number((Number(x.qtd||0)-Number(c.qtd||0)).toFixed(3)));
+  db.compras.splice(i,1); salvar(); renderCompras();
+}
+function renderCompras(){
+  const box=document.getElementById("listaCompras"); if(!box) return; box.innerHTML="";
+  db.compras.slice().reverse().slice(0,30).forEach(c=>{const d=document.createElement("div");d.className="sale-line";
+    d.innerHTML=`<div style="flex:1"><b>${c.nome}</b><div class="small">${c.data} • ${fmtQtd(c.qtd)} ${c.unidade}</div></div><div style="text-align:right"><b>${dinheiro(c.valor)}</b><br><button class="mini danger" onclick="excluirCompra(${c.id})">Cancelar</button></div>`;box.appendChild(d)});
+  if(!db.compras.length) box.innerHTML="<div class='small'>Nenhuma compra registrada.</div>";
+}
+function renderFinanceiro(){
+  const dia=hoje(), mes=dia.slice(0,7);
+  const vendasDia=db.vendas.filter(v=>v.data===dia), vendasMes=db.vendas.filter(v=>String(v.data||"").slice(0,7)===mes);
+  const comprasDia=db.compras.filter(c=>c.data===dia), comprasMes=db.compras.filter(c=>String(c.data||"").slice(0,7)===mes);
+  const calc=(vendas,compras)=>{
+    const fat=vendas.reduce((s,v)=>s+Number(v.total||0),0);
+    const custos=vendas.reduce((s,v)=>s+Number(v.custo||0),0);
+    const recebido=vendas.filter(v=>v.situacao==="Entregue e recebido").reduce((s,v)=>s+Number(v.total||0),0);
+    const gasto=compras.reduce((s,c)=>s+Number(c.valor||0),0);
+    return {fat,lucro:fat-custos,recebido,gasto,caixa:recebido-gasto};
+  };
+  const h=calc(vendasDia,comprasDia), m=calc(vendasMes,comprasMes);
+  document.getElementById("financeiroHoje").innerHTML=`<div class="stat">Faturamento hoje<b>${dinheiro(h.fat)}</b></div><div class="stat">Lucro estimado<b>${dinheiro(h.lucro)}</b></div><div class="stat">Compras hoje<b>${dinheiro(h.gasto)}</b></div><div class="stat">Caixa recebido<b>${dinheiro(h.caixa)}</b></div>`;
+  document.getElementById("financeiroMes").innerHTML=`<div class="stat">Faturamento<b>${dinheiro(m.fat)}</b></div><div class="stat">Lucro estimado<b>${dinheiro(m.lucro)}</b></div><div class="stat">Compras<b>${dinheiro(m.gasto)}</b></div><div class="stat">Caixa recebido<b>${dinheiro(m.caixa)}</b></div>`;
+}
+
+iniciar();
+</script>
+</body>
+</html>
